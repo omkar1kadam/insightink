@@ -15,12 +15,15 @@ def plot_sentiment_bar(sentiment_counts, save_path="static/sentiment_bar.png"):
 
 # Function to generate radar chart for emotion analysis
 def plot_emotion_radar(emotion_scores, save_path="static/emotion_radar.png"):
+    print("Generating Emotion Radar Chart...")  # Debugging
+    print("Data:", emotion_scores)  # Debugging
+
     labels = list(emotion_scores.keys())
     values = list(emotion_scores.values())
 
-    # Close the radar shape by repeating the first value at the end
-    values += values[:1]
-    labels += labels[:1]
+    # Close the radar shape
+    values.append(values[0])  # Append first value again
+    labels.append(labels[0])  # Append first label again (Fixing the mismatch)
 
     angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
 
@@ -28,9 +31,10 @@ def plot_emotion_radar(emotion_scores, save_path="static/emotion_radar.png"):
     ax.fill(angles, values, color="blue", alpha=0.3)
     ax.plot(angles, values, color="blue", linewidth=2)
 
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(labels)
+    ax.set_xticks(angles)  # Ensure tick count matches labels
+    ax.set_xticklabels(labels)  # Match labels with angles
 
     plt.title("Emotion Breakdown")
     plt.savefig(save_path)
+    print(f"Saved Emotion Graph at {save_path}")  # Debugging
     plt.close()

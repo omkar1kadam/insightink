@@ -15,6 +15,138 @@ body {
     position: relative;
     scroll-behavior: auto; /* Reset scroll behavior for page changes */
 }
+/* General Reset */
+body, h1, h2, h3, p, ul, li, button, input {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Spacing & Layout Fixes */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    padding: 20px; /* Ensures everything has breathing room */
+}
+
+/* Ensure sections have enough spacing */
+section {
+    margin-bottom: 50px; /* Adds space between sections */
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: #111;
+    color: white;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px; /* Keeps nav items spaced */
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 50px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Search Section */
+.search-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Main Analysis Section */
+.analysis-layout {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Ensures it looks good on small screens */
+}
+
+.post-section, .analysis-section {
+    flex: 1;
+    min-width: 300px; /* Prevents elements from becoming too small */
+}
+
+/* Charts */
+.charts-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.chart-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    width: 45%;
+}
+
+/* Chatbot Section */
+.chatbot-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Features Section */
+.features-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.feature-card {
+    flex: 1;
+    min-width: 280px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #111;
+    color: white;
+    margin-top: 50px;
+}
+
 
 /* Animation Classes */
 .fade-up {
@@ -1124,9 +1256,8 @@ footer a:hover {
 
 .bar-chart, .pie-chart {
     flex: 1; /* Take remaining space */
-    min-height: 0; /* Allow container to shrink */
+    min-height: 300; /* Allow container to shrink */
 }
-
 /* Chatbot Section */
 .chatbot-section {
     width: 80%;
@@ -1358,33 +1489,12 @@ footer a:hover {
 /* Page Navigation Reset */
 .page-reset {
     scroll-behavior: auto;
-    scroll-top: 0;
 } 
 
-
-
-/* Common styles for scrollable containers */
-.scrollable {
-    overflow-y: auto;
-    scrollbar-width: thin;  /* For Firefox */
-    scrollbar-color: rgba(155, 107, 255, 0.5) rgba(255, 255, 255, 0.1);  /* For Firefox */
-}
-
-/* Webkit scrollbar styling (Chrome, Safari, Edge) */
-.scrollable::-webkit-scrollbar {
-    width: 6px;
-}
-
-.scrollable::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-
-.scrollable::-webkit-scrollbar-thumb {
-    background: rgba(155, 107, 255, 0.5);
-    border-radius: 3px;
-}
-
-.scrollable::-webkit-scrollbar-thumb:hover {
-    background: rgba(155, 107, 255, 0.7);
+.scrollable-comments {
+    max-height: 300px; /* Adjust height as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    border: 1px solid #ccc; /* Optional: Adds a border for clarity */
+    padding: 10px; /* Optional: Adds spacing */
+    background-color: #000000; /* Optional: Light background for better readability */
 }

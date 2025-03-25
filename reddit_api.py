@@ -20,7 +20,7 @@ class RedditAPI:
         pass  # No need for session-based requests when using praw
     
 
-    def fetch_comments(self, post_id: str, max_comments: int = 100) -> list:
+    def fetch_comments(self, post_id: str, max_comments: int = 10) -> list:
         """Fetches top-level comments for a given post ID using PRAW"""
         def shorten_comment(comment, limit=500):
             words = comment.split()

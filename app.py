@@ -15,13 +15,29 @@ CORS(app)
 GEMINI_API_KEY = "AIzaSyB2yxeiFcUsEp2dZoekeRka5hX4FHI4C2U"
 genai.configure(api_key=GEMINI_API_KEY)
 
+def main(post_url):
+    reddit_api = RedditAPI()
+
+    post_url = post_url
+    post_id = re.search(r"/comments/([a-zA-Z0-9]+)/", post_url).group(1)
+
+    comments_list = reddit_api.fetch_comments(post_id, max_comments=5)
+    print(comments_list)
+    return comments_list
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    top_comments = []  # Default empty list
+
     if request.method == "POST":
-        text = request.form["text"]
-        
+        data = request.json
+        post_url = data.get("post_url", "").strip()
+        print("Received JSON:", data)
+
+        if not post_url:
+            return jsonify({"error": "No URL provided"}), 400
+
         # Dummy Sentiment Analysis Results (Replace with NLP model results)
         sentiment_counts = {"Positive": 20, "Neutral": 15, "Negative": 10}
         emotion_scores = {"Joy": 0.8, "Anger": 0.3, "Sadness": 0.5, "Fear": 0.2, "Surprise": 0.6}
@@ -30,9 +46,17 @@ def index():
         plot_sentiment_bar(sentiment_counts)
         plot_emotion_radar(emotion_scores)
 
-        return render_template("home.html", bar_graph="static/sentiment_bar.png", radar_chart="static/emotion_radar.png")
+        # Fetch top comments from main() function
+        top_comments = main(post_url)  
+        print(top_comments)
 
-    return render_template("home.html", bar_graph=None, radar_chart=None)
+    return render_template(
+        "home.html",
+        bar_graph="static/sentiment_bar.png" if top_comments else None,
+        radar_chart="static/emotion_radar.png" if top_comments else None,
+        top_comments=top_comments
+    )
+
 
 @app.route('/services')
 def services():
@@ -53,21 +77,14 @@ def contact():
 
 
 # Sentimental analysis Integration starts : Parth 
-def main(post_url):
-    reddit_api = RedditAPI()
 
-    post_url = post_url
-    post_id = re.search(r"/comments/([a-zA-Z0-9]+)/", post_url).group(1)
-
-    comments_list = reddit_api.fetch_comments(post_id, max_comments=1000)
-    print(comments_list)
-    return comments_list
 
 @app.route('/fetch_comments', methods=['POST'])
 def fetch_comments():
     try:
         data = request.json
         post_url = data.get("post_url", "").strip()
+        print("Received JSON:", data)
 
         if not post_url:
             return jsonify({"error": "No URL provided"}), 400
@@ -171,4 +188,12 @@ def analyze():
 # # omkar`s code ending here 
 
 if __name__ == "__main__":  
+    test_sentiment = {"Positive": 20, "Neutral": 15, "Negative": 10}
+    test_emotions = {"Joy": 0.8, "Anger": 0.3, "Sadness": 0.5, "Fear": 0.2, "Surprise": 0.6}
+
+    print("Generating test graphs...")
+    plot_sentiment_bar(test_sentiment)
+    plot_emotion_radar(test_emotions)
+    print("Graphs generated! Check the 'static' folder.")
     app.run(port=5001)
+
