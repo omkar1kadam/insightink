@@ -1,48 +1,50 @@
-<section class="page-section about">
-    <div class="about-content">
-        <h2>About InsightInk</h2>
-        <p class="section-intro">We are a creative digital agency passionate about transforming ideas into exceptional digital experiences.</p>
-        
-        <div class="about-grid">
-            <div class="service-card">
-                <h3>Our Mission</h3>
-                <p>To empower businesses with innovative digital solutions that drive growth and create meaningful connections with their audience.</p>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static' , filename='css/styles.css')}}">
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">InsightInk</a>
+        <nav>
+            <ul>
+                <li><a href="/services" data-page="services">Services</a></li>
+                <li><a href="/flow" data-page="flow">Flow</a></li>
+                <li><a href="/about" data-page="about">About</a></li>
+                <li><a href="/contact" data-page="contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="page-section about">
+        <div class="about-content">
+            <h2>About InsightInk</h2>
+            <p class="section-intro">Empowering data-driven decisions by analyzing Reddit discussions and sentiment trends.</p>
             
-            <div class="service-card">
-                <h3>Our Vision</h3>
-                <p>To be the leading force in digital transformation, setting new standards for creativity, innovation, and technical excellence.</p>
-            </div>
-            
-            <div class="service-card">
-                <h3>Our Values</h3>
-                <ul>
-                    <li>Innovation First</li>
-                    <li>Quality Driven</li>
-                    <li>Client Success</li>
-                    <li>Continuous Learning</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="team-section">
-            <h2>Our Team</h2>
-            <div class="team-grid">
+            <div class="about-grid">
                 <div class="service-card">
-                    <h3>Leadership</h3>
-                    <p>Our experienced leadership team brings decades of industry expertise to guide our vision and strategy.</p>
+                    <h3>Our Mission</h3>
+                    <p>To provide accurate, AI-driven sentiment analysis and summarization for Reddit discussions, empowering businesses, researchers, and communities with actionable insights for better decision-making.</p>
                 </div>
                 
                 <div class="service-card">
-                    <h3>Developers</h3>
-                    <p>Skilled developers who turn complex challenges into elegant solutions using cutting-edge technologies.</p>
+                    <h3>Our Vision</h3>
+                    <p>To be the leading force in digital transformation, setting new standards for creativity, innovation, and technical excellence.</p>
                 </div>
                 
                 <div class="service-card">
-                    <h3>Designers</h3>
-                    <p>Creative designers who craft beautiful and intuitive user experiences that engage and inspire.</p>
+                    <h3>Our Values</h3>
+                    <ul>
+                        <li>Accuracy</li>
+                        <li>Innovation</li>
+                        <li>Transparency</li>
+                        <li>Efficiency</li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-</section> 
+    </section> 
+</body>
+</html>

@@ -58,7 +58,7 @@ html:not(.no-smooth-scroll) {
     background: #1a1a1a;
     transform: scaleY(0);
     transform-origin: top;
-    z-index: 1000;
+    z-index: 0;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1027,14 +1027,17 @@ footer a:hover {
 
 /* Post Section */
 .post-section {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
     height: 100%;
 }
 
 .post-section .content-box {
-    height: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 1rem;
+    height: calc(100% - 20px);  /* Adjust for padding */
+    overflow-y: auto;
 }
 
 /* Analysis Section */
@@ -1176,6 +1179,9 @@ footer a:hover {
 }
 
 .chatbot-input {
+    resize: none; /* Prevents resizing */
+    width: 100%; /* Adjust as needed */
+    height: 40px; /* Set a fixed height */
     flex: 1;
     display: flex;
     align-items: center;
@@ -1217,7 +1223,7 @@ footer a:hover {
 }
 
 .chatbot-output {
-    margin-top: 10px;
+    margin: 10px auto; /* Centering the div */
     padding: 10px;
     background: #2c2c2c;
     border-radius: 10px;
@@ -1225,7 +1231,10 @@ footer a:hover {
     font-size: 0.9rem;
     min-height: 50px; /* Ensure a minimum height */
     display: block; /* Make it always visible */
+    max-width: 100%; /* Adjust width as needed */
+    width: 100%; /* Responsive width */
 }
+
 
 .chat-send svg {
     width: 16px;
@@ -1351,3 +1360,31 @@ footer a:hover {
     scroll-behavior: auto;
     scroll-top: 0;
 } 
+
+
+
+/* Common styles for scrollable containers */
+.scrollable {
+    overflow-y: auto;
+    scrollbar-width: thin;  /* For Firefox */
+    scrollbar-color: rgba(155, 107, 255, 0.5) rgba(255, 255, 255, 0.1);  /* For Firefox */
+}
+
+/* Webkit scrollbar styling (Chrome, Safari, Edge) */
+.scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: rgba(155, 107, 255, 0.5);
+    border-radius: 3px;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background: rgba(155, 107, 255, 0.7);
+}

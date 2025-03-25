@@ -1,87 +1,174 @@
 from flask import Flask, request, jsonify , render_template , url_for
 from flask_cors import CORS
 import pandas as pd
+import google.generativeai as genai
+from sentimental import analyze_sentiment_nlp, translateHitoEn
+from visualisation import plot_sentiment_bar, plot_emotion_radar
+from langdetect import detect
 from datetime import datetime
-import os
-import traceback
+from reddit_api import RedditAPI 
+import re  # Import regex module
 
 app = Flask(__name__)
 CORS(app)
 
+GEMINI_API_KEY = "AIzaSyB2yxeiFcUsEp2dZoekeRka5hX4FHI4C2U"
+genai.configure(api_key=GEMINI_API_KEY)
 
 
-# Create a data directory if it doesn't exist
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
-    print(f"Created data directory at: {DATA_DIR}")
 
-EXCEL_FILE = os.path.join(DATA_DIR, 'contact_submissions.xlsx')
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        text = request.form["text"]
+        
+        # Dummy Sentiment Analysis Results (Replace with NLP model results)
+        sentiment_counts = {"Positive": 20, "Neutral": 15, "Negative": 10}
+        emotion_scores = {"Joy": 0.8, "Anger": 0.3, "Sadness": 0.5, "Fear": 0.2, "Surprise": 0.6}
 
-@app.route('/')
-def home():
-    return render_template("home.html")
+        # Generate graphs
+        plot_sentiment_bar(sentiment_counts)
+        plot_emotion_radar(emotion_scores)
 
-@app.route('/api/contact', methods=['POST'])
-def handle_contact():
+        return render_template("home.html", bar_graph="static/sentiment_bar.png", radar_chart="static/emotion_radar.png")
+
+    return render_template("home.html", bar_graph=None, radar_chart=None)
+
+@app.route('/services')
+def services():
+    return render_template("services.html")
+
+@app.route('/flow')
+def flow():
+    return render_template("flow.html")
+
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
+@app.route('/contact')
+def contact():
+    return render_template("contact.html")
+
+
+
+# Sentimental analysis Integration starts : Parth 
+def main(post_url):
+    reddit_api = RedditAPI()
+
+    post_url = post_url
+    post_id = re.search(r"/comments/([a-zA-Z0-9]+)/", post_url).group(1)
+
+    comments_list = reddit_api.fetch_comments(post_id, max_comments=1000)
+    print(comments_list)
+    return comments_list
+
+@app.route('/fetch_comments', methods=['POST'])
+def fetch_comments():
     try:
-        # Get and validate the data
-        data = request.get_json()
-        if not data:
-            print("Error: No data received")
-            return jsonify({"error": "No data received"}), 400
+        data = request.json
+        post_url = data.get("post_url", "").strip()
 
-        required_fields = ['name', 'email', 'subject', 'message']
-        for field in required_fields:
-            if field not in data:
-                print(f"Error: Missing required field: {field}")
-                return jsonify({"error": f"Missing required field: {field}"}), 400
+        if not post_url:
+            return jsonify({"error": "No URL provided"}), 400
+        
+        print("Fetching comments for:", post_url)  # Debugging
 
-        # Add timestamp
-        data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        comments = main(post_url)
+        print("Fetched comments:", comments)  # Debugging
 
-        # Create DataFrame from the form data
-        df_new = pd.DataFrame([data])
-        print(f"Received data: {data}")
+        analyzed_comments = []
+        negative, neutral, positive = 0, 0, 0
+        emotions_dict = {}
 
-        try:
-            # If file exists, append to it
-            if os.path.exists(EXCEL_FILE):
-                print(f"Appending to existing file: {EXCEL_FILE}")
-                df_existing = pd.read_excel(EXCEL_FILE)
-                df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-            else:
-                print(f"Creating new file: {EXCEL_FILE}")
-                df_combined = df_new
-            
-            # Save to Excel with error handling
+        for comment in comments:
             try:
-                df_combined.to_excel(EXCEL_FILE, index=False)
-                print(f"Successfully saved data to {EXCEL_FILE}")
-                print(f"Current entries in Excel: {len(df_combined)}")
-                return jsonify({"message": "Success", "entries": len(df_combined)}), 200
-            except Exception as save_error:
-                print(f"Error saving Excel file: {str(save_error)}")
-                print(traceback.format_exc())
-                return jsonify({"error": "Failed to save data"}), 500
-                
-        except Exception as excel_error:
-            print(f"Error working with Excel file: {str(excel_error)}")
-            print(traceback.format_exc())
-            return jsonify({"error": "Failed to process Excel file"}), 500
-            
-    except Exception as e:
-        print(f"Error processing request: {str(e)}")
-        print(traceback.format_exc())
-        return jsonify({"error": "Failed to process request"}), 400
+                lang = detect(comment)
+                if lang == 'unknown':
+                    comment = translateHitoEn(comment)
 
-if __name__ == '__main__':
-    print(f"Starting server...")
-    print(f"Excel file will be saved to: {EXCEL_FILE}")
-    if os.path.exists(EXCEL_FILE):
-        try:
-            df = pd.read_excel(EXCEL_FILE)
-            print(f"Existing entries in Excel: {len(df)}")
-        except Exception as e:
-            print(f"Error reading existing Excel file: {str(e)}")
-    app.run(debug=True, port=5000) 
+                sentiment, scores, emotion = analyze_sentiment_nlp(comment)  # Ensure this works!
+                
+                print(f"Analyzing Comment: {comment}")  # Debugging
+                print(f"Sentiment: {sentiment}, Scores: {scores}, Emotion: {emotion}")  # Debugging
+
+                negative += scores["Negative"]
+                neutral += scores["Neutral"]
+                positive += scores["Positive"]
+
+                emotion_label = emotion[0][0]['label']
+                emotions_dict[emotion_label] = emotions_dict.get(emotion_label, 0) + 1
+
+                analyzed_comments.append({
+                    "comment": comment,
+                    "sentiment": sentiment,
+                    "scores": scores,
+                    "emotion": emotion
+                })
+            except Exception as e:
+                print("Error processing comment:", e)  # Debugging
+
+        total_comments = len(comments)
+        percent_negative = (negative / total_comments) * 100 if total_comments > 0 else 0
+        percent_neutral = (neutral / total_comments) * 100 if total_comments > 0 else 0
+        percent_positive = (positive / total_comments) * 100 if total_comments > 0 else 0
+
+        return jsonify({
+            "comments": analyzed_comments,
+            "percent_negative": percent_negative,
+            "percent_neutral": percent_neutral,
+            "percent_positive": percent_positive,
+            "emotions": emotions_dict
+        })
+    
+    except Exception as e:
+        print("Critical Error:", e)  # Debugging
+        return jsonify({"error": str(e)}), 500
+
+
+# Sentimental analysis Integration Ends : Parth
+
+
+
+# omkar`s code starting here 
+
+
+def format_text(text):
+    """Converts '*' into a new line and '**text**' into bold uppercase with an extra new line before it"""
+    text = re.sub(r"\*\*(.*?)\*\*", lambda match: f"<br><br><b>{match.group(1).upper()}</b>", text)
+    text = text.replace("*", "<br>")
+    return text
+
+# Load the Gemini Model only once (outside the function)
+genai_model = genai.GenerativeModel("gemini-1.5-flash")
+
+def analyze_sentiment(comment):
+    """Sends a comment to Gemini API for sentiment analysis."""
+    if not comment.strip():
+        return "No comment provided."
+
+    prompt = f"You are an expert in sentiment analysis. Explain your reasoning.\nComment: {comment}"
+
+    try:
+        response = genai_model.generate_content(prompt)  # Reuse the loaded model
+        formatted_response = format_text(response.text) if response else "Error analyzing sentiment."
+        return formatted_response
+    except Exception as e:
+        return f"API Error: {str(e)}"
+
+    
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    data = request.json
+    comment = data.get("comment", "").strip()
+
+    if not comment:
+        return jsonify({"error": "No comment provided."}), 400
+
+    sentiment = analyze_sentiment(comment)
+    return jsonify({"analysis": sentiment})  
+
+# # omkar`s code ending here 
+
+if __name__ == "__main__":  
+    app.run(port=5001)

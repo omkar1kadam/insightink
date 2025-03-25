@@ -1,70 +1,70 @@
-// Simple page transition handler
-const transitionWrapper = document.querySelector('.page-transition-wrapper');
-const mainContent = document.querySelector('main');
+// // Simple page transition handler
+// // const transitionWrapper = document.querySelector('.page-transition-wrapper');
+// const mainContent = document.querySelector('main');
 
-// Function to handle page transitions
-async function handlePageTransition(target) {
-    try {
-        console.log('Starting transition to:', target);
+// // Function to handle page transitions
+// async function handlePageTransition(target) {
+//     try {
+//         console.log('Starting transition to:', target);
         
-        // Start transition
-        transitionWrapper.style.transform = 'scaleY(1)';
+//         // Start transition
+//         transitionWrapper.style.transform = 'scaleY(1)';
         
-        // Wait for transition
-        await new Promise(resolve => setTimeout(resolve, 500));
+//         // Wait for transition
+//         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Load new content
-        const pageName = target === '/' ? 'home' : target;
-        const url = `/pages/${pageName}.html`;
-        console.log('Fetching content from:', url);
+//         // Load new content
+//         const pageName = target === '/' ? 'home' : target;
+//         const url = `/pages/${pageName}.html`;
+//         console.log('Fetching content from:', url);
         
-        const response = await fetch(url);
-        console.log('Response status:', response.status);
+//         const response = await fetch(url);
+//         console.log('Response status:', response.status);
         
-        if (!response.ok) {
-            throw new Error(`Failed to load page: ${response.status}`);
-        }
+//         if (!response.ok) {
+//             throw new Error(`Failed to load page: ${response.status}`);
+//         }
         
-        const content = await response.text();
-        console.log('Content loaded successfully');
+//         const content = await response.text();
+//         console.log('Content loaded successfully');
         
-        // Extract the main content from the loaded page
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(content, 'text/html');
-        const newMainContent = doc.querySelector('main');
+//         // Extract the main content from the loaded page
+//         const parser = new DOMParser();
+//         const doc = parser.parseFromString(content, 'text/html');
+//         const newMainContent = doc.querySelector('main');
         
-        if (newMainContent) {
-            mainContent.innerHTML = newMainContent.innerHTML;
-        } else {
-            mainContent.innerHTML = content;
-        }
+//         if (newMainContent) {
+//             mainContent.innerHTML = newMainContent.innerHTML;
+//         } else {
+//             mainContent.innerHTML = content;
+//         }
         
-        // Update URL
-        const newUrl = target === 'home' ? '/' : `/${target}`;
-        window.history.pushState({}, '', newUrl);
-        console.log('URL updated to:', newUrl);
+//         // Update URL
+//         const newUrl = target === 'home' ? '/' : `/${target}`;
+//         window.history.pushState({}, '', newUrl);
+//         console.log('URL updated to:', newUrl);
         
-        // End transition
-        transitionWrapper.style.transformOrigin = 'bottom';
-        transitionWrapper.style.transform = 'scaleY(0)';
+//         // End transition
+//         transitionWrapper.style.transformOrigin = 'bottom';
+//         transitionWrapper.style.transform = 'scaleY(0)';
         
-        // Reset transition wrapper
-        setTimeout(() => {
-            transitionWrapper.style.transformOrigin = 'top';
-        }, 500);
+//         // Reset transition wrapper
+//         setTimeout(() => {
+//             transitionWrapper.style.transformOrigin = 'top';
+//         }, 500);
         
-    } catch (error) {
-        console.error('Error in handlePageTransition:', error);
-        mainContent.innerHTML = `
-            <section class="error">
-                <h1>404</h1>
-                <p>Page not found</p>
-                <p>Error: ${error.message}</p>
-                <a href="/" data-page="home" class="btn primary">Go Home</a>
-            </section>
-        `;
-    }
-}
+//     } catch (error) {
+//         console.error('Error in handlePageTransition:', error);
+//         mainContent.innerHTML = `
+//             <section class="error">
+//                 <h1>404</h1>
+//                 <p>Page not found</p>
+//                 <p>Error: ${error.message}</p>
+//                 <a href="/" data-page="home" class="btn primary">Go Home</a>
+//             </section>
+//         `;
+//     }
+// }
 
 // Handle navigation clicks
 document.addEventListener('click', (e) => {
