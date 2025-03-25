@@ -4,6 +4,15 @@ import pandas as pd
 from datetime import datetime
 import os
 import traceback
+from flask import Flask,render_template, request, jsonify
+import google.generativeai as genai
+import re  # Import regex module
+
+# Your Gemini API Key (Replace with your actual API Key)
+API_KEY = "AIzaSyB2yxeiFcUsEp2dZoekeRka5hX4FHI4C2U"
+
+# Configure Gemini API
+genai.configure(api_key=API_KEY)
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +24,11 @@ if not os.path.exists(DATA_DIR):
     print(f"Created data directory at: {DATA_DIR}")
 
 EXCEL_FILE = os.path.join(DATA_DIR, 'contact_submissions.xlsx')
+
+
+@app.route('/')
+def index():
+    return render_template("../Frontened/pages/home.html")
 
 @app.route('/api/contact', methods=['POST'])
 def handle_contact():
@@ -68,6 +82,21 @@ def handle_contact():
         print(f"Error processing request: {str(e)}")
         print(traceback.format_exc())
         return jsonify({"error": "Failed to process request"}), 400
+    
+    #chatbot code by omkar
+
+stored_data = ""
+
+@app.route('/store', methods=['GET' , 'POST' ])
+def store():
+    global stored_data
+    data = request.json.get("input")  # Get input from frontend
+    stored_data = data
+    print("Received:", stored_data)  # Print in backend console
+    return jsonify({"message": "Data stored successfully", "stored": stored_data})
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 if __name__ == '__main__':
     print(f"Starting server...")
@@ -79,3 +108,6 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"Error reading existing Excel file: {str(e)}")
     app.run(debug=True, port=5000) 
+
+
+

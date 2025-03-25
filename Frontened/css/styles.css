@@ -1126,14 +1126,9 @@ footer a:hover {
 
 /* Chatbot Section */
 .chatbot-section {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
     width: 80%;
     max-width: 600px;
-    z-index: 100;
-    pointer-events: none;
+    margin: 20px auto;
 }
 
 .chatbot-container {
@@ -1147,15 +1142,20 @@ footer a:hover {
     -webkit-backdrop-filter: blur(10px);
     border-radius: 25px;
     padding: 0.6rem 1rem;
-    pointer-events: auto;
     transition: all 0.3s ease;
     width: 100%;
+    max-height: 50px;
+    overflow: hidden;
 }
 
 .chatbot-container:hover {
     border-color: rgba(155, 107, 255, 0.4);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
     transform: translateY(-2px);
+}
+
+.chatbot-container.active {
+    max-height: 200px;
 }
 
 .chatbot-avatar {
@@ -1201,6 +1201,7 @@ footer a:hover {
     color: var(--text-secondary, rgba(255, 255, 255, 0.5));
 }
 
+/* Chat Send Button */
 .chat-send {
     width: 32px;
     height: 32px;
@@ -1213,6 +1214,17 @@ footer a:hover {
     cursor: pointer;
     transition: all 0.3s ease;
     flex-shrink: 0;
+}
+
+.chatbot-output {
+    margin-top: 10px;
+    padding: 10px;
+    background: #2c2c2c;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.9rem;
+    min-height: 50px; /* Ensure a minimum height */
+    display: block; /* Make it always visible */
 }
 
 .chat-send svg {
