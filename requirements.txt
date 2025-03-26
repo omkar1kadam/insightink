@@ -11,3 +11,4 @@ scipy==1.15.2
 seaborn==0.13.2
 torch
 transformers==4.50.1
+gunicorn 

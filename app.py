@@ -10,6 +10,8 @@ from reddit_api import RedditAPI
 import re  # Import regex module
 import time 
 import os 
+import threading
+
 
 app = Flask(__name__)
 CORS(app)

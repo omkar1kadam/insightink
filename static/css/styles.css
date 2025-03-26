@@ -1072,7 +1072,7 @@ footer a:hover {
 .bar-chart,
 .pie-chart {
     background: transparent;
-    border: 2px solid #ffffff;
+    border: 2px solid black;
     border-radius: 15px;
     padding: 20px;
     height: 300px;
@@ -1129,6 +1129,7 @@ footer a:hover {
     max-width: 600px;
     z-index: 100;
     pointer-events: none;
+    padding: 10px;
 }
 
 .chatbot-container {
