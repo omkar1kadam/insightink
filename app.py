@@ -192,21 +192,9 @@ def fetch_comments():
         # ✅ Generate graphs and store them
         print("Generating Sentiment Bar Graph with:", sentiment_counts)
         plot_sentiment_bar(sentiment_counts)
-        while (os.path.exists("static/sentiment_bar.png") and os.path.exists("static/emotion_radar.png")):
-            time.sleep(10)  # Wait for half a second and check again
-        if os.path.exists("static/sentiment_bar.png"):
-            os.remove("static/sentiment_bar.png")
-        if os.path.exists("static/emotion_radar.png"):
-            os.remove("static/emotion_radar.png")
 
         print("Generating Emotion Radar Chart with:", emotions_dict)
         plot_emotion_radar(emotions_dict)
-        while (os.path.exists("static/sentiment_bar.png") and os.path.exists("static/emotion_radar.png")):
-            time.sleep(10)  # Wait for half a second and check again
-        if os.path.exists("static/sentiment_bar.png"):
-            os.remove("static/sentiment_bar.png")
-        if os.path.exists("static/emotion_radar.png"):
-            os.remove("static/emotion_radar.png")
 
         return jsonify({
             "post_image": post_image,  # ✅ Now including post image
@@ -268,11 +256,5 @@ def analyze():
 # # omkar`s code ending here 
 
 if __name__ == "__main__":  
-    while (os.path.exists("static/sentiment_bar.png") and os.path.exists("static/emotion_radar.png")):
-        time.sleep(10)  # Wait for half a second and check again
-        if os.path.exists("static/sentiment_bar.png"):
-            os.remove("static/sentiment_bar.png")
-        if os.path.exists("static/emotion_radar.png"):
-            os.remove("static/emotion_radar.png")
     app.run(port=5001)
 
