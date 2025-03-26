@@ -12,3 +12,6 @@ seaborn==0.13.2
 torch
 transformers==4.50.1
 gunicorn 
+google.generativeai
+re  
+threading
