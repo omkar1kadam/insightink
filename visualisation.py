@@ -2,9 +2,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
-
+    
 # Function to generate bar graph for sentiment distribution
 def plot_sentiment_bar(sentiment_counts, save_path="static/sentiment_bar.png"):
+    if os.path.exists("static/sentiment_bar.png"):
+     os.remove("static/sentiment_bar.png")
+
     plt.figure(figsize=(6, 4))
     sns.barplot(x=sentiment_counts.keys(), y=sentiment_counts.values(), palette="coolwarm")
     plt.xlabel("Sentiment")
@@ -15,6 +18,8 @@ def plot_sentiment_bar(sentiment_counts, save_path="static/sentiment_bar.png"):
 
 # Function to generate radar chart for emotion analysis
 def plot_emotion_radar(emotion_scores, save_path="static/emotion_radar.png"):
+    if os.path.exists("static/emotion_radar.png"):
+     os.remove("static/emotion_radar.png")
     print("Generating Emotion Radar Chart...")  # Debugging
     print("Data:", emotion_scores)  # Debugging
 
@@ -38,3 +43,6 @@ def plot_emotion_radar(emotion_scores, save_path="static/emotion_radar.png"):
     plt.savefig(save_path)
     print(f"Saved Emotion Graph at {save_path}")  # Debugging
     plt.close()
+
+
+

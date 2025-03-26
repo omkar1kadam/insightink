@@ -46,224 +46,276 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <form id="fetch-comments-form">
-                <input type="text" id="post-url" placeholder="Paste your link of reddit post here..." class="search-input">
-                <button type="submit" class="search-button">
-                    <span>Search</span>
-                    <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </button>
-            </form>
+                    <input type="text" id="post-url" placeholder="Paste your link of reddit post here..."
+                        class="search-input">
+                    <button type="submit" class="search-button">
+                        <span>Search</span>
+                        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </form>
             </div>
         </div>
     </section>
     <!-- main showoff our websitesection -->
     <section class="analysis-layout">
         <!-- Left Column - Post Section -->
-        <div class="post-section">
+        <!-- <div class="post-section">
             <div class="content-box scrollable">
                 <h2>Post</h2>
+                {% if post_image %}
+                    <img src="{{ post_image }}" alt="Reddit Post Image" class="post-image">
+                {% else %}
+                    <p>No image available for this post.</p>
+                {% endif %}
                 <div class="post-content">
-                    <!-- Post content will go here -->
-                </div>
+                    
+              <!--   </div>
             </div>
         </div>
+         -->
+
 
         <!-- Right Column - Analysis Section -->
         <div class="analysis-section">
             <!-- Top Comments Section -->
             <div class="top-comments">
-            <h2>Top Comments</h2>
-            <div class="scrollable-comments">
-                <div>
-                {% if top_comments %}
-                    {% for comment in top_comments %}
+                <h2>Top Comments</h2>
+                <div class="scrollable-comments">
                     <div>
-                        <p>{{ comment }}</p>
+                        {% if top_comments %}
+                        {% for comment in top_comments %}
+                        <div>
+                            <p>{{ comment }}</p>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p>No comments available. Paste a Reddit post URL and analyze!</p>
+                        {% endif %}
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <p>No comments available. Paste a Reddit post URL and analyze!</p>
-                {% endif %}
                 </div>
             </div>
+        </div>
+
+
+        <!-- Charts Container -->
+        <div class="charts-container">
+            <!-- Bar Chart -->
+            <div class="chart-box">
+                <h3>Sentiment Distribution</h3>
+                <div class="bar-chart">
+                    <img src="{{ url_for('static', filename='sentiment_bar.png') }}?t={{ time() }}" alt="Sentiment Graph">
+                </div>
+            </div>
+
+            <!-- Radar Chart -->
+            <div class="chart-box">
+                <h3>Emotion Breakdown</h3>
+                <div class="radar-chart">
+                    <img src="{{ url_for('static', filename='emotion_radar.png') }}?t={{ time() }}" alt="Emotion Graph">
+                </div>
             </div>
         </div>
-        
 
-           <!-- Charts Container -->
-<div class="charts-container">
-    <!-- Bar Chart -->
-    <div class="chart-box">
-        <h3>Sentiment Distribution</h3>
-        <div class="bar-chart">
-            <img id="sentiment-bar" src="" alt="Sentiment Bar Chart" style="display: none; width: 100%;">
-        </div>
-    </div>
-
-    <!-- Radar Chart -->
-    <div class="chart-box">
-        <h3>Emotion Breakdown</h3>
-        <div class="radar-chart">
-            <img id="emotion-radar" src="" alt="Emotion Radar Chart" style="display: none; width: 100%;">
-        </div>
-    </div>
-</div>
-
-    <!-- Chatbot Section -->    
-    <section class="chatbot-section">
-        <div class="chatbot-container">
-            <div class="chatbot-avatar">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                    <line x1="9" y1="9" x2="9.01" y2="9"/>
-                    <line x1="15" y1="9" x2="15.01" y2="9"/>
-                </svg>
-            </div>
-            <div class="chatbot-input">
-                <input type="text" id="comment" placeholder="Ask me anything..." class="chat-input">
-                <button onclick="analyzeSentiment()" class="chat-send">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
+        <!-- Chatbot Section -->
+        <section class="chatbot-section">
+            <div class="chatbot-container">
+                <div class="chatbot-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                        <line x1="9" y1="9" x2="9.01" y2="9" />
+                        <line x1="15" y1="9" x2="15.01" y2="9" />
                     </svg>
-                </button>
-            </div>
-        </div>
-        <div class="loading" style="display: none;">Analyzing...</div>
-        <div id="result" class="chatbot-output result-box" style="display: none;"></div>
-    </section>
-
-    <section class="features-section">
-        <div class="features-container">
-            <div class="features-header">
-                <h2>Why Choose InsightInk</h2>
-                <p>Discover how our innovative solutions can transform your digital presence and drive success for your
-                    business.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-content">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                            </svg>
-                        </div>
-                        <h3>Sentiment Analysis</h3>
-                        <p>✅ Our advanced NLP model precisely analyzes Reddit comments, categorizing them as Positive,
-                            Neutral, or Negative with exceptional accuracy.</p>
-                    </div>
                 </div>
-                <div class="feature-card highlight">
-                    <div class="feature-content">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <!-- Outer Circle -->
-                                <circle cx="12" cy="12" r="9"></circle>
-                                <!-- Middle Circle -->
-                                <circle cx="12" cy="12" r="5"></circle>
-                                <!-- Inner Circle -->
-                                <circle cx="12" cy="12" r="2"></circle>
-                                <!-- Arrow -->
-                                <path d="M12 2v4"></path>
-                                <path d="M12 22v-4"></path>
-                                <path d="M2 12h4"></path>
-                                <path d="M22 12h-4"></path>
-                            </svg>
-
-                        </div>
-                        <h3>Accurate Insights</h3>
-                        <p>✅ Leverage our high-accuracy NLP model to classify comments into Positive, Neutral, or
-                            Negative sentiments.</p>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-content">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path
-                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
-                                </path>
-                                <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
-                                <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
-                                <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                        </div>
-                        <h3>Data Visualization</h3>
-                        <p>📊 Get an in-depth sentiment breakdown with intuitive bar charts, helping you visualize
-                            discussions at a glance.</p>
-                    </div>
+                <div class="chatbot-input">
+                    <input type="text" id="comment" placeholder="Ask me anything..." class="chat-input">
+                    <button onclick="analyzeSentiment()" class="chat-send">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
                 </div>
             </div>
-        </div>
-    </section>
+            <div class="loading" style="display: none;">Analyzing...</div>
+            <div id="result" class="chatbot-output result-box" style="display: none;"></div>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <ul>
-            <li><a href="/privacy">Privacy Policy</a></li>
-            <li><a href="/terms">Terms of Service</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-    </footer>
+        
+        <div style="height: 50px;"></div>
+        <section class="features-section">
+            <div class="features-container">
+                <div class="features-header">
+                    <h2>Why Choose InsightInk</h2>
+                    <p>Discover how our innovative solutions can transform your digital presence and drive success for
+                        your
+                        business.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-content">
+                            <div class="feature-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                                </svg>
+                            </div>
+                            <h3>Sentiment Analysis</h3>
+                            <p>✅ Our advanced NLP model precisely analyzes Reddit comments, categorizing them as
+                                Positive,
+                                Neutral, or Negative with exceptional accuracy.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card highlight">
+                        <div class="feature-content">
+                            <div class="feature-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <!-- Outer Circle -->
+                                    <circle cx="12" cy="12" r="9"></circle>
+                                    <!-- Middle Circle -->
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <!-- Inner Circle -->
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                    <!-- Arrow -->
+                                    <path d="M12 2v4"></path>
+                                    <path d="M12 22v-4"></path>
+                                    <path d="M2 12h4"></path>
+                                    <path d="M22 12h-4"></path>
+                                </svg>
 
-    <!-- Scripts -->
-    <script type="js" src="{{ url_for( 'static' , filename='js/transitions.js')}}"></script>
-    <script type="js" src="{{ url_for( 'static' , filename='js/animations.js')}}"></script>
+                            </div>
+                            <h3>Accurate Insights</h3>
+                            <p>✅ Leverage our high-accuracy NLP model to classify comments into Positive, Neutral, or
+                                Negative sentiments.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-content">
+                            <div class="feature-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                    </path>
+                                    <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                                    <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                                    <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <h3>Data Visualization</h3>
+                            <p>📊 Get an in-depth sentiment breakdown with intuitive bar charts, helping you visualize
+                                discussions at a glance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <ul>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/terms">Terms of Service</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </footer>
+
+        <!-- Scripts -->
+        <script type="js" src="{{ url_for( 'static' , filename='js/transitions.js')}}"></script>
+        <script type="js" src="{{ url_for( 'static' , filename='js/animations.js')}}"></script>
 
 
-    <script>
-document.getElementById("fetch-comments-form").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Stop form from reloading the page
+        <script>
+            document.getElementById("fetch-comments-form").addEventListener("submit", async function (event) {
+                event.preventDefault(); // Stop form from reloading the page
 
-    const postUrl = document.getElementById("post-url").value.trim();
-    if (!postUrl) {
-        alert("Please enter a Reddit post URL!");
-        return;
-    }
+                const postUrl = document.getElementById("post-url").value.trim();
+                if (!postUrl) {
+                    alert("Please enter a Reddit post URL!");
+                    return;
+                }
 
-    try {
-        const response = await fetch("/fetch_comments", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ post_url: postUrl }),
-        });
+                try {
+                    const response = await fetch("/fetch_comments", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ post_url: postUrl }),
+                    });
 
-        const data = await response.json();
-        console.log("Response from backend:", data); // Debugging
+                    const data = await response.json();
+                    console.log("Response from backend:", data); // Debugging
 
-        if (data.comments) {
-            const commentsContainer = document.querySelector(".top-comments div");
-            commentsContainer.innerHTML = ""; // Clear previous comments
+                    if (data.comments) {
+                        const commentsContainer = document.querySelector(".top-comments div");
+                        commentsContainer.innerHTML = ""; // Clear previous comments
 
-            data.comments.forEach((commentData) => {
-                const commentElement = document.createElement("div");
-                commentElement.innerHTML = `<p>${commentData.comment} - <strong>${commentData.sentiment}</strong></p>`;
-                commentsContainer.appendChild(commentElement);
+                        data.comments.forEach((commentData) => {
+                            const commentElement = document.createElement("div");
+                            commentElement.innerHTML = `<p>${commentData.comment} - <strong>${commentData.sentiment}</strong></p>`;
+                            commentsContainer.appendChild(commentElement);
+                        });
+
+                        // ✅ Update chart images dynamically
+                        document.getElementById("sentiment-bar").src = "static/sentiment_bar.png";
+                        document.getElementById("sentiment-bar").style.display = "block";
+
+                        document.getElementById("emotion-radar").src = "static/emotion_radar.png";
+                        document.getElementById("emotion-radar").style.display = "block";
+                    }
+
+                } catch (error) {
+                    console.error("Error fetching comments:", error);
+                }
             });
 
-            // ✅ Update chart images dynamically
-            document.getElementById("sentiment-bar").src = "static/sentiment_bar.png";
-            document.getElementById("sentiment-bar").style.display = "block";
-
-            document.getElementById("emotion-radar").src = "static/emotion_radar.png";
-            document.getElementById("emotion-radar").style.display = "block";
-        }
-
-    } catch (error) {
-        console.error("Error fetching comments:", error);
-    }
-});
-
-    </script>
-</body> 
-    
+        </script>
+        <script>
+            async function analyzeSentiment() {
+                const comment = document.getElementById("comment").value.trim();
+                const resultDiv = document.getElementById("result");
+                const loadingDiv = document.querySelector(".loading");
+        
+                if (!comment) {
+                    alert("Please enter a comment.");
+                    return;
+                }
+        
+                // Show loading
+                loadingDiv.style.display = "block";
+                resultDiv.style.display = "none";
+        
+                try {
+                    const response = await fetch("/analyze", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ comment })
+                    });
+        
+                    const data = await response.json();
+                    loadingDiv.style.display = "none";
+        
+                    if (data.error) {
+                        resultDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                    } else {
+                        resultDiv.innerHTML = `<strong>Analysis:</strong><br>${data.analysis}`;
+                    }
+                    resultDiv.style.display = "block";
+        
+                } catch (error) {
+                    loadingDiv.style.display = "none";
+                    resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                    resultDiv.style.display = "block";
+                }
+            }
+        </script>
+</body>
